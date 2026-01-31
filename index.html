@@ -3,174 +3,133 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Curb Chain Calculator (v1.3)</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0b0f14">
-  <!-- PWA -->
-  <meta name="theme-color" content="#0b0f14" />
-  <link rel="manifest" href="manifest.json">
+  <title>N8's Jewelers Calculator</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b0f14">
+
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <style>
-    :root{
-      --bg:#0b0f14; --card:#121925; --card2:#0f1520;
-      --text:#e9eef6; --muted:#9fb0c6; --line:#1e2a3a;
-      --accent:#4aa3ff; --warn:#ffcc66; --bad:#ff6b6b; --good:#62d26f;
+    :root {
+      --bg: #0b0f14;
+      --card: #121925;
+      --card2: #0f1520;
+      --text: #e9eef6;
+      --muted: #9fb0c6;
+      --line: #1e2a3a;
+      --accent: #4aa3ff;
+      --warn: #ffcc66;
+      --bad: #ff6b6b;
+      --good: #62d26f;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: radial-gradient(1200px 600px at 20% -10%, #142033 0%, var(--bg) 55%) fixed;
-      color:var(--text);
-      padding:18px;
+      color: var(--text);
+      padding: 18px;
     }
-    .wrap{ max-width:880px; margin:0 auto; }
-    header{ margin-bottom:14px; }
-    h1{ margin:0 0 6px 0; font-size:1.35rem; letter-spacing:.2px; }
-    .sub{ color:var(--muted); font-size:.95rem; line-height:1.35; }
-
-    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
-    @media(min-width:860px){ .grid{ grid-template-columns:1fr 1fr; } }
-
-    .card{
+    .wrap { max-width: 880px; margin: 0 auto; }
+    header { margin-bottom: 14px; }
+    h1 { margin: 0 0 6px 0; font-size: 1.35rem; letter-spacing: .2px; }
+    .sub { color: var(--muted); font-size: .95rem; line-height: 1.35; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media(min-width:860px){ .grid { grid-template-columns: 1fr 1fr; } }
+    .card {
       background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .card h2{ margin:0 0 10px 0; font-size:1.05rem; }
-    label{ display:block; font-size:.9rem; color:var(--muted); margin:10px 0 6px; }
-    .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-
-    input[type="number"]{
-      width:160px; max-width:100%;
-      padding:11px 12px; border-radius:12px;
-      border:1px solid var(--line);
-      background:#0a0f18; color:var(--text);
-      font-size:1rem; outline:none;
-    }
-    input[type="number"]:focus{
-      border-color: rgba(74,163,255,.7);
-      box-shadow: 0 0 0 3px rgba(74,163,255,.15);
-    }
-    input[type="text"]{
-      width:100%; min-width:220px; max-width:100%;
-      padding:11px 12px; border-radius:12px;
-      border:1px solid var(--line);
-      background:#0a0f18; color:var(--text);
-      font-size:1rem; outline:none;
-    }
-    input[type="text"]:focus{
-      border-color: rgba(74,163,255,.7);
-      box-shadow: 0 0 0 3px rgba(74,163,255,.15);
-    }
-    select{
-      padding:11px 12px; border-radius:12px;
-      border:1px solid var(--line);
-      background:#0a0f18; color:var(--text);
-      font-size:1rem; outline:none;
-    }
-    select:focus{
-      border-color: rgba(74,163,255,.7);
-      box-shadow: 0 0 0 3px rgba(74,163,255,.15);
-    }
-
-    .seg{
-      display:inline-flex; border:1px solid var(--line);
-      border-radius:12px; overflow:hidden; background:#0a0f18;
-    }
-    .seg button{
-      appearance:none; border:0; background:transparent;
-      color:var(--muted); padding:10px 12px;
-      font-size:.92rem; cursor:pointer; min-width:56px;
-    }
-    .seg button.active{ background: rgba(74,163,255,.18); color:var(--text); }
-
-    .radio-group{ display:flex; flex-direction:column; gap:8px; margin-top:6px; }
-    .radio{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:10px 12px; border:1px solid var(--line);
-      border-radius:12px; background:#0a0f18; cursor:pointer;
-    }
-    .radio input{ margin-top:2px; }
-    .radio strong{ display:block; font-size:.95rem; color:var(--text); }
-    .radio span{ display:block; font-size:.86rem; color:var(--muted); margin-top:2px; }
-
-    .tightness{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
-    .pill{
-      border:1px solid var(--line); background:#0a0f18;
-      color:var(--muted); padding:10px 12px;
-      border-radius:999px; cursor:pointer; font-size:.92rem; user-select:none;
-    }
-    .pill.active{
-      background: rgba(74,163,255,.18);
+    .card h2 { margin: 0 0 10px 0; font-size: 1.05rem; }
+    label { display: block; font-size: .9rem; color: var(--muted); margin: 10px 0 6px; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    input[type="number"], input[type="text"], select {
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #0a0f18;
       color: var(--text);
-      border-color: rgba(74,163,255,.45);
+      font-size: 1rem;
+      outline: none;
+      padding: 11px 12px;
     }
-
-    .toggle{
-      display:flex; align-items:center; gap:10px;
-      margin-top:10px; padding:10px 12px;
-      border:1px solid var(--line);
-      border-radius:12px; background:#0a0f18;
-    }
-    .toggle input{ width:18px; height:18px; accent-color: var(--accent); }
-
-    .btn{
-      width:100%; border:0; border-radius:14px;
-      padding:13px 14px;
+    input[type="number"] { width: 160px; max-width: 100%; }
+    input[type="text"] { width: 100%; min-width: 220px; max-width: 100%; }
+    select:focus, input:focus { border-color: rgba(74,163,255,.7); box-shadow: 0 0 0 3px rgba(74,163,255,.15); }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #0a0f18; }
+    .seg button { border: 0; background: transparent; color: var(--muted); padding: 10px 12px; font-size: .92rem; cursor: pointer; min-width: 56px; }
+    .seg button.active { background: rgba(74,163,255,.18); color: var(--text); }
+    .radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .radio { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #0a0f18; cursor: pointer; }
+    .radio input { margin-top: 2px; }
+    .radio strong { display: block; font-size: .95rem; }
+    .radio span { display: block; font-size: .86rem; color: var(--muted); margin-top: 2px; }
+    .tightness { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .pill { border: 1px solid var(--line); background: #0a0f18; color: var(--muted); padding: 10px 12px; border-radius: 999px; cursor: pointer; font-size: .92rem; user-select: none; }
+    .pill.active { background: rgba(74,163,255,.18); color: var(--text); border-color: rgba(74,163,255,.45); }
+    .toggle { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #0a0f18; }
+    .toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 14px;
       background: linear-gradient(180deg, rgba(74,163,255,.95) 0%, rgba(74,163,255,.75) 100%);
-      color:#07101c; font-weight:700; font-size:1rem;
-      cursor:pointer; box-shadow: 0 12px 24px rgba(74,163,255,.18);
-      margin-top:12px;
+      color: #07101c;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(74,163,255,.18);
+      margin-top: 12px;
     }
-    .btn:active{ transform: translateY(1px); }
-
-    .results .kpi{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
-    .k{ border:1px solid var(--line); background:#0a0f18; border-radius:14px; padding:10px 12px; }
-    .k .t{ color:var(--muted); font-size:.82rem; }
-    .k .v{ font-size:1.05rem; margin-top:4px; }
-
-    .badge{
-      display:inline-block; padding:5px 9px; border-radius:999px;
-      font-size:.82rem; border:1px solid var(--line); margin-top:8px;
-    }
-    .badge.good{ border-color: rgba(98,210,111,.35); color: var(--good); background: rgba(98,210,111,.08); }
-    .badge.warn{ border-color: rgba(255,204,102,.35); color: var(--warn); background: rgba(255,204,102,.08); }
-    .badge.bad{ border-color: rgba(255,107,107,.35); color: var(--bad); background: rgba(255,107,107,.08); }
-
-    details{ margin-top:10px; border:1px solid var(--line); border-radius:14px; background:#0a0f18; padding:10px 12px; }
-    summary{ cursor:pointer; color:var(--text); font-weight:600; }
-    .small{ color:var(--muted); font-size:.9rem; line-height:1.35; margin-top:8px; }
-
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .btn2{
-      flex:1; min-width:140px;
-      border:1px solid var(--line);
-      background:#0a0f18; color:var(--text);
-      border-radius:14px; padding:12px 12px;
-      cursor:pointer; font-weight:650;
-    }
-    .toast{ margin-top:10px; color:var(--muted); font-size:.9rem; min-height:1.2em; }
-    .note{ color:var(--muted); font-size:.85rem; margin-top:8px; }
-    .hidden{ display:none !important; }
+    .btn2 { flex: 1; min-width: 140px; border: 1px solid var(--line); background: #0a0f18; color: var(--text); border-radius: 14px; padding: 12px 12px; cursor: pointer; font-weight: 650; }
+    .results .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .k { border: 1px solid var(--line); background: #0a0f18; border-radius: 14px; padding: 10px 12px; }
+    .k .t { color: var(--muted); font-size: .82rem; }
+    .k .v { font-size: 1.05rem; margin-top: 4px; }
+    .badge { display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: .82rem; border: 1px solid var(--line); margin-top: 8px; }
+    .badge.good { border-color: rgba(98,210,111,.35); color: var(--good); background: rgba(98,210,111,.08); }
+    .badge.warn { border-color: rgba(255,204,102,.35); color: var(--warn); background: rgba(255,204,102,.08); }
+    .badge.bad  { border-color: rgba(255,107,107,.35); color: var(--bad); background: rgba(255,107,107,.08); }
+    details { margin-top: 10px; border: 1px solid var(--line); border-radius: 14px; background: #0a0f18; padding: 10px 12px; }
+    summary { cursor: pointer; font-weight: 600; }
+    .small { color: var(--muted); font-size: .9rem; line-height: 1.35; margin-top: 8px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .toast { margin-top: 10px; color: var(--muted); font-size: .9rem; min-height: 1.2em; }
+    .note { color: var(--muted); font-size: .85rem; margin-top: 8px; }
+    .hidden { display: none !important; }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <header>
-      <h1>Curb Chain Jump Ring Calculator (v1.3)</h1>
-      <div class="sub">Installable phone-friendly estimator for curb chain made from round jump rings.</div>
+      <h1>N8's Jewelers Calculator</h1>
+      <div class="sub">Installable phone-friendly estimator for chain made from wire.</div>
     </header>
 
     <div class="grid">
-      <!-- INPUTS -->
       <section class="card">
         <h2>Inputs</h2>
+
+        <label>Chain type</label>
+        <div class="row">
+          <select id="chainType">
+            <option value="curb" selected>Curb (jump rings)</option>
+            <option value="rope">Rope</option>
+            <option value="franco" disabled>Franco (Pro)</option>
+          </select>
+        </div>
+        <div class="note" id="chainNote">
+        Rope calculations are estimation-based. Always test a short sample.
+       </div>
 
         <label>Finished length</label>
         <div class="row">
@@ -190,10 +149,9 @@
           </div>
         </div>
         <div class="note" id="wireHint"></div>
-        <div class="note">Tip: “tight but friendly” often starts around 2.0 mm wire and ~5.5–6.0 mm ID.</div>
 
-        <label>Pick what you know</label>
-        <div class="radio-group">
+        <div class="radio-group" id="modeGroup">
+          <label>Pick what you know</label>
           <div class="radio" id="modeIdCard">
             <input id="modeId" type="radio" name="mode" checked />
             <div>
@@ -227,10 +185,10 @@
         </div>
 
         <label>Style / tightness</label>
-        <div class="tightness" aria-label="Tightness">
-          <div id="tTight" class="pill active" role="button" tabindex="0">Tight (dense)</div>
+        <div class="tightness" id="tightGroup" aria-label="Tightness">
+          <div id="tTight" class="pill active" role="button" tabindex="0">Tight</div>
           <div id="tMed" class="pill" role="button" tabindex="0">Medium</div>
-          <div id="tLoose" class="pill" role="button" tabindex="0">Loose (drapey)</div>
+          <div id="tLoose" class="pill" role="button" tabindex="0">Loose</div>
         </div>
 
         <div class="toggle">
@@ -239,6 +197,24 @@
             <div style="font-weight:650;">Add extra for waste</div>
             <div class="note">Adds +5% to your ring count (recommended).</div>
           </div>
+        </div>
+
+        <div id="ropeBlock" class="hidden">
+          <h3 style="margin:14px 0 6px 0; font-size:1.0rem;">Rope chain inputs (UI only)</h3>
+          <label>Core diameter (mandrel)</label>
+          <div class="row">
+            <input id="ropeCore" type="number" inputmode="decimal" step="0.01" value="4.0" min="0" />
+            <div class="seg"><button class="active" type="button" aria-disabled="true">mm</button></div>
+          </div>
+          <label>Twist density</label>
+          <div class="row">
+            <select id="ropeTwist">
+              <option value="light">Light</option>
+              <option value="medium" selected>Medium</option>
+              <option value="tight">Tight</option>
+            </select>
+          </div>
+          <div class="note">Rope calculations are estimation-based. Always test a short sample.</div>
         </div>
 
         <label>Metal (for weight estimate)</label>
@@ -250,7 +226,6 @@
             <option value="brass">Brass</option>
           </select>
         </div>
-        <div class="note">Weight estimate assumes round wire and average curb flattening.</div>
 
         <label>Saved recipes</label>
         <div class="row">
@@ -263,13 +238,11 @@
           <input id="recipeName" type="text" placeholder="Recipe name (optional)" />
           <button id="saveRecipeBtn" class="btn2" type="button">Save recipe</button>
         </div>
-        <div class="note">Recipes save to this device (browser local storage).</div>
 
         <button id="calcBtn" class="btn" type="button">Calculate</button>
         <div id="inputErr" class="toast"></div>
       </section>
 
-      <!-- RESULTS -->
       <section class="card results">
         <h2>Results</h2>
         <div class="small" id="resultNote">Enter your inputs and tap <b>Calculate</b>.</div>
@@ -290,17 +263,6 @@
             <div class="k"><div class="t">Estimated weight</div><div class="v" id="outWeight">—</div></div>
           </div>
 
-          <details>
-            <summary>Tips for tight curb</summary>
-            <div class="small">
-              <ul>
-                <li>Perfect closures before twisting/flattening — tiny gaps cause binding.</li>
-                <li>If it feels like “hard mode,” increase ID by 0.5–1.0 mm (same wire).</li>
-                <li>Keep ring roundness consistent for a cleaner, flatter lay.</li>
-              </ul>
-            </div>
-          </details>
-
           <div class="actions">
             <button class="btn2" id="copyBtn" type="button">Copy recipe</button>
             <button class="btn2" id="resetBtn" type="button">Reset</button>
@@ -312,41 +274,41 @@
   </div>
 
   <script>
-    // PWA installability on Chromium expects a manifest + service worker with fetch handler. 0
-
-    // --- constants ---
     const PRESETS = {
-      tight:  { f: 0.90, k: 0.45, label: "Tight (dense)" },
+      tight:  { f: 0.90, k: 0.45, label: "Tight" },
       medium: { f: 0.95, k: 0.50, label: "Medium" },
-      loose:  { f: 1.00, k: 0.55, label: "Loose (drapey)" }
+      loose:  { f: 1.00, k: 0.55, label: "Loose" }
     };
 
-    const DENSITY = { // g/cm^3
+    const ROPE_TWIST = {
+      light:  { pitchFactor: 1.10, label: "Light"  }, // looser twist
+      medium: { pitchFactor: 0.95, label: "Medium" }, // default
+      tight:  { pitchFactor: 0.82, label: "Tight"  }  // tighter twist
+    };
+
+    const DENSITY = {
       fine_silver: 10.49,
       sterling: 10.36,
       copper: 8.96,
       brass: 8.50
     };
 
-    const STORAGE_KEY_LAST = "curb_last_settings";
-    const STORAGE_KEY_RECIPES = "curb_saved_recipes";
+    const STORAGE_KEY_LAST = "n8_calc_last_settings";
+    const STORAGE_KEY_RECIPES = "n8_calc_saved_recipes";
 
-    // --- helpers ---
     const $ = (id) => document.getElementById(id);
-    const roundTo = (x, dp=2) => {
-      const m = Math.pow(10, dp);
-      return Math.round(x*m)/m;
-    };
+    const roundTo = (x, dp = 2) => Math.round(x * (10**dp)) / (10**dp);
     const ceilInt = (x) => Math.ceil(x);
     const roundInt = (x) => Math.round(x);
 
-    // --- UI state ---
-    let lenUnit = "in";   // "in" | "mm"
-    let wireUnit = "mm";  // "mm" | "awg"
-    let mode = "id";      // "id" | "width"
-    let tightness = "tight";
+    const IS_PRO = localStorage.getItem("n8_calc_pro") === "true";
 
-    // --- local storage helpers ---
+    let lenUnit = "in";
+    let wireUnit = "mm";
+    let mode = "id";
+    let tightness = "tight";
+    let chainType = "curb";
+
     function getAllRecipes(){
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY_RECIPES)) || {}; }
       catch { return {}; }
@@ -354,44 +316,12 @@
     function saveAllRecipes(recipes){
       localStorage.setItem(STORAGE_KEY_RECIPES, JSON.stringify(recipes));
     }
-    function getCurrentSettings(){
-      return {
-        lenVal: $("lenVal").value,
-        lenUnit,
-        wireVal: $("wireVal").value,
-        wireUnit,
-        mode,
-        ringId: $("ringId").value,
-        targetWidth: $("targetWidth").value,
-        tightness,
-        waste: $("waste").checked,
-        metal: $("metal").value
-      };
-    }
-    function applySettings(s){
-      if(!s) return;
-
-      $("lenVal").value = s.lenVal ?? 8.0;
-      setLenUnit(s.lenUnit ?? "in");
-
-      $("wireVal").value = s.wireVal ?? 2.0;
-      setWireUnit(s.wireUnit ?? "mm");
-
-      setMode(s.mode ?? "id");
-      $("ringId").value = s.ringId ?? 5.5;
-      $("targetWidth").value = s.targetWidth ?? 8.5;
-
-      setTightness(s.tightness ?? "tight");
-      $("waste").checked = !!s.waste;
-      $("metal").value = s.metal ?? "sterling";
-
-      updateWireHint();
-    }
     function refreshRecipeList(){
       const list = $("recipeList");
+      if (!list) return;
       const recipes = getAllRecipes();
       list.innerHTML = '<option value="">— Select a saved recipe —</option>';
-      Object.keys(recipes).sort().forEach(name=>{
+      Object.keys(recipes).sort().forEach((name) => {
         const opt = document.createElement("option");
         opt.value = name;
         opt.textContent = name;
@@ -399,96 +329,67 @@
       });
     }
 
-    // --- unit toggles & UI wiring ---
-    $("lenIn").onclick = () => setLenUnit("in");
-    $("lenMm").onclick = () => setLenUnit("mm");
-
-    $("wireUnitMm").onclick = () => setWireUnit("mm");
-    $("wireUnitAwg").onclick = () => { setWireUnit("awg"); clearInputErr(); updateWireHint(); };
-
-    $("modeIdCard").onclick = () => setMode("id");
-    $("modeWidthCard").onclick = () => setMode("width");
-
-    $("tTight").onclick = () => setTightness("tight");
-    $("tMed").onclick = () => setTightness("medium");
-    $("tLoose").onclick = () => setTightness("loose");
-
-    ["tTight","tMed","tLoose"].forEach(pid=>{
-      $(pid).addEventListener("keydown",(e)=>{
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $(pid).click(); }
-      });
-    });
-
-    $("calcBtn").onclick = calculate;
-    $("copyBtn").onclick = copyRecipe;
-    $("resetBtn").onclick = resetAll;
-
-    $("saveRecipeBtn").onclick = () => {
-      if(!window.__lastRecipeSettings){
-        $("toast").textContent = "Run a calculation first, then save.";
-        return;
-      }
-      const recipes = getAllRecipes();
-      const nameFromBox = ($("recipeName").value || "").trim();
-      const autoName = `${roundTo(window.__lastRecipeSettings.d,2)}mm / ID ${roundTo(window.__lastRecipeSettings.ID,2)} / ${tightness}`;
-      const name = nameFromBox || autoName;
-
-      recipes[name] = window.__lastRecipeSettings;
-      saveAllRecipes(recipes);
-      refreshRecipeList();
-      $("recipeList").value = name;
-      $("toast").textContent = `Saved: ${name} ✅`;
-    };
-
-    $("recipeList").addEventListener("change", () => {
-      const name = $("recipeList").value;
-      if(!name) return;
-      const recipes = getAllRecipes();
-      applySettings(recipes[name]);
-      $("toast").textContent = `Loaded: ${name} ✅`;
-    });
-
-    // change events to keep "last settings" fresh
-    ["lenVal","wireVal","ringId","targetWidth","waste","metal"].forEach(id=>{
-      $(id).addEventListener("change", () => {
-        localStorage.setItem(STORAGE_KEY_LAST, JSON.stringify(getCurrentSettings()));
-      });
-    });
+    function clearInputErr(){ $("inputErr").textContent = ""; }
+    function showInputErr(msg){ $("inputErr").textContent = msg; }
 
     function setLenUnit(u){
       lenUnit = u;
-      $("lenIn").classList.toggle("active", u==="in");
-      $("lenMm").classList.toggle("active", u==="mm");
+      $("lenIn").classList.toggle("active", u === "in");
+      $("lenMm").classList.toggle("active", u === "mm");
     }
     function setWireUnit(u){
       wireUnit = u;
-      $("wireUnitMm").classList.toggle("active", u==="mm");
-      $("wireUnitAwg").classList.toggle("active", u==="awg");
+      $("wireUnitMm").classList.toggle("active", u === "mm");
+      $("wireUnitAwg").classList.toggle("active", u === "awg");
       updateWireHint();
     }
     function setMode(m){
       mode = m;
-      $("modeId").checked = (m==="id");
-      $("modeWidth").checked = (m==="width");
-      $("idBlock").classList.toggle("hidden", m!=="id");
-      $("widthBlock").classList.toggle("hidden", m!=="width");
+      $("modeId").checked = (m === "id");
+      $("modeWidth").checked = (m === "width");
+      $("idBlock").classList.toggle("hidden", m !== "id");
+      $("widthBlock").classList.toggle("hidden", m !== "width");
       clearInputErr();
     }
     function setTightness(t){
       tightness = t;
-      $("tTight").classList.toggle("active", t==="tight");
-      $("tMed").classList.toggle("active", t==="medium");
-      $("tLoose").classList.toggle("active", t==="loose");
+      $("tTight").classList.toggle("active", t === "tight");
+      $("tMed").classList.toggle("active", t === "medium");
+      $("tLoose").classList.toggle("active", t === "loose");
       clearInputErr();
     }
 
-    function clearInputErr(){ $("inputErr").textContent = ""; }
-    function showInputErr(msg){ $("inputErr").textContent = msg; }
+    function setChainType(t){
+      chainType = t;
+
+      const ropeBlock = $("ropeBlock");
+      if (ropeBlock) ropeBlock.classList.toggle("hidden", t !== "rope");
+
+      const modeGroup = $("modeGroup");
+      const tightGroup = $("tightGroup");
+      const idBlock = $("idBlock");
+      const widthBlock = $("widthBlock");
+
+      const note = $("chainNote");
+      if (note){
+        note.innerHTML = (t === "rope")
+        ? "Rope calculations are estimation-based. Always test a short sample."
+      : "Curb calculator is production-ready. Save recipes for repeat builds.";
+    }
+
+      const hideCurbStuff = (t === "rope");
+      if (modeGroup) modeGroup.classList.toggle("hidden", hideCurbStuff);
+      if (tightGroup) tightGroup.classList.toggle("hidden", hideCurbStuff);
+      if (idBlock) idBlock.classList.toggle("hidden", hideCurbStuff || mode !== "id");
+      if (widthBlock) widthBlock.classList.toggle("hidden", hideCurbStuff || mode !== "width");
+
+      clearInputErr();
+    }
 
     function getLengthMm(){
       const v = parseFloat($("lenVal").value);
-      if(!isFinite(v) || v<=0) return null;
-      return lenUnit === "in" ? v*25.4 : v;
+      if (!isFinite(v) || v <= 0) return null;
+      return (lenUnit === "in") ? v * 25.4 : v;
     }
 
     function awgToMm(awg){
@@ -498,23 +399,24 @@
 
     function getWireMm(){
       const v = parseFloat($("wireVal").value);
-      if(!isFinite(v) || v<=0) return null;
-      if(wireUnit === "mm") return v;
-      if(v < 0 || v > 40) return null;
+      if (!isFinite(v) || v <= 0) return null;
+      if (wireUnit === "mm") return v;
+      if (v < 0 || v > 40) return null;
       return awgToMm(v);
     }
 
     function updateWireHint(){
       const v = parseFloat($("wireVal").value);
       const hint = $("wireHint");
-      if(!isFinite(v) || v<=0){ hint.textContent = ""; return; }
+      if (!hint) return;
+      if (!isFinite(v) || v <= 0) { hint.textContent = ""; return; }
 
-      if(wireUnit === "mm"){
+      if (wireUnit === "mm") {
         let best = { awg: 0, diff: Infinity };
-        for(let a=0; a<=40; a++){
+        for (let a = 0; a <= 40; a++){
           const mm = awgToMm(a);
           const diff = Math.abs(mm - v);
-          if(diff < best.diff) best = { awg: a, diff };
+          if (diff < best.diff) best = { awg: a, diff };
         }
         hint.textContent = `≈ ${best.awg} AWG (approx)`;
       } else {
@@ -523,74 +425,136 @@
     }
 
     function estimateWireLengthMm(ID, d, ringCount){
-      const meanD = ID + d;          // mm
-      return Math.PI * meanD * ringCount; // mm
+      const meanD = ID + d;
+      return Math.PI * meanD * ringCount;
     }
 
     function estimateWeightGrams(d, wireLenMm, density){
-      const r = d / 2;                 // mm
-      const area = Math.PI * r * r;    // mm^2
+      const r = d / 2;
+      const area = Math.PI * r * r;
       const volume_mm3 = area * wireLenMm;
       const volume_cm3 = volume_mm3 / 1000;
       return volume_cm3 * density;
     }
 
-    function calculate(){
-      clearInputErr();
-      $("toast").textContent = "";
+    function ropeWrapsPerMm(d){
+      // wraps along the length per mm (roughly one wire diameter per wrap)
+      return 1 / d;
+    }
+    
+    function estimateRopeWireLengthMm(Lmm, d, coreMm, twistKey){
+      // Very usable first-pass model:
+      // - treat rope as a wrapped helix around a core (core + wire is mean diameter)
+      // - twistKey changes how "dense" the rope is along its length (pitchFactor)
+      const meanDia = coreMm + d;                 // mm
+      const helixCirc = Math.PI * meanDia;        // mm per wrap around
+      const wrapsPerMm = ropeWrapsPerMm(d);       // wraps per mm length (base)
+      const pitchFactor = ROPE_TWIST[twistKey]?.pitchFactor ?? ROPE_TWIST.medium.pitchFactor;
 
-      const L = getLengthMm();
-      const d = getWireMm();
-      if(L === null) return showInputErr("Please enter a valid finished length.");
-      if(d === null) return showInputErr("Please enter a valid wire size (mm or AWG).");
+      const wrapsTotal = Lmm * wrapsPerMm / pitchFactor; // tighter twist => more wraps
+      return helixCirc * wrapsTotal;                      // total wire length in mm
+    }
 
-      const preset = PRESETS[tightness];
-      const f = preset.f;
-      const k = preset.k;
+    function getCurrentSettings(){
+      return {
+        lenVal: $("lenVal").value,
+        lenUnit,
+        wireVal: $("wireVal").value,
+        wireUnit,
+        chainType,
+        mode,
+        ringId: $("ringId").value,
+        targetWidth: $("targetWidth").value,
+        tightness,
+        waste: $("waste").checked,
+        metal: $("metal").value,
+        ropeCore: $("ropeCore")?.value,
+        ropeTwist: $("ropeTwist")?.value,
+      };
+    }
 
-      let ID, OD, W_est;
+    function applySettings(s){
+      if (!s) return;
+      setLenUnit(s.lenUnit ?? "in");
+      setWireUnit(s.wireUnit ?? "mm");
+      $("lenVal").value = s.lenVal ?? 8.0;
+      $("wireVal").value = s.wireVal ?? 2.0;
 
-      if(mode === "id"){
-        ID = parseFloat($("ringId").value);
-        if(!isFinite(ID) || ID<=0) return showInputErr("Please enter a valid ring ID (mm).");
-        OD = ID + 2*d;
-        W_est = f * OD;
-      } else {
-        const W_target = parseFloat($("targetWidth").value);
-        if(!isFinite(W_target) || W_target<=0) return showInputErr("Please enter a valid target curb width (mm).");
-        OD = W_target / f;
-        ID = OD - 2*d;
-        W_est = f * OD;
-      }
+      setMode(s.mode ?? "id");
+      $("ringId").value = s.ringId ?? 5.5;
+      $("targetWidth").value = s.targetWidth ?? 8.5;
+  if ($("ropeCore")) $("ropeCore").value = s.ropeCore ?? 4.0;
+  if ($("ropeTwist")) $("ropeTwist").value = s.ropeTwist ?? "medium";
 
-      if(OD <= 0) return showInputErr("Your inputs produced an invalid ring OD. Check your numbers.");
-      if(ID <= 0) return showInputErr("Your inputs produced an invalid ring ID (<= 0). Increase OD/width or reduce wire size.");
+      setTightness(s.tightness ?? "tight");
+      $("waste").checked = !!s.waste;
+      $("metal").value = s.metal ?? "sterling";
 
-      const ratio = ID / d;
-      const pitch = k * OD;
-      if(pitch <= 0) return showInputErr("Invalid pitch. Check your inputs.");
+      $("chainType").value = s.chainType ?? "curb";
+      setChainType($("chainType").value);
 
-      const ringsRaw = L / pitch;
-      const addWaste = $("waste").checked;
-      const ringsTotal = addWaste ? ringsRaw * 1.05 : ringsRaw;
+      updateWireHint();
+    }
 
-      const ringsEst = roundInt(ringsRaw);
-      const ringsCut = ceilInt(ringsTotal);
-      const rpi = 25.4 / pitch;
+    function makeDefaultRecipeName(){
+      const L = $("lenVal").value;
+      const wire = $("wireVal").value + (wireUnit === "awg" ? "awg" : "mm");
+      const id = $("ringId").value;
+      if (mode === "id") return `${chainType} ${L}${lenUnit} ${wire} ID${id} ${tightness}`;
+      const w = $("targetWidth").value;
+      return `${chainType} ${L}${lenUnit} ${wire} W${w} ${tightness}`;
+    }
 
-      const metalKey = $("metal").value || "sterling";
-      const density = DENSITY[metalKey] || DENSITY.sterling;
-      const wireLenMm = estimateWireLengthMm(ID, d, ringsCut);
-      const weightG = estimateWeightGrams(d, wireLenMm, density);
+    function saveCurrentRecipe(){
+      if (!window.__lastRecipe) { $("toast").textContent = "Run a calculation first, then save."; return; }
 
-      renderResults({ d, ID, OD, W_est, ratio, pitch, ringsEst, ringsCut, rpi, wireLenMm, weightG, addWaste });
+      const raw = ($("recipeName").value || "").trim();
+      const name = raw || makeDefaultRecipeName();
 
-      // auto-save last settings
-      localStorage.setItem(STORAGE_KEY_LAST, JSON.stringify(getCurrentSettings()));
+      const recipes = getAllRecipes();
+      recipes[name] = getCurrentSettings();
+      saveAllRecipes(recipes);
 
-      // store last result settings for “Save recipe”
-      window.__lastRecipeSettings = getCurrentSettings();
-      window.__lastRecipe = buildRecipeText({ d, ID, OD, W_est, ratio, ringsEst, ringsCut, rpi, wireLenMm, weightG });
+      refreshRecipeList();
+      $("recipeList").value = name;
+      $("recipeName").value = "";
+      $("toast").textContent = `Saved recipe: ${name} ✅`;
+    }
+
+    function loadSelectedRecipe(){
+      const list = $("recipeList");
+      const name = list.value;
+      if (!name) return;
+
+      const recipes = getAllRecipes();
+      const s = recipes[name];
+      if (!s) { $("toast").textContent = "Recipe not found."; refreshRecipeList(); return; }
+
+      applySettings(s);
+      $("toast").textContent = `Loaded recipe: ${name} ✅`;
+    }
+
+    function buildRecipeText(o){
+      const metalName = $("metal").selectedOptions?.[0]?.textContent || $("metal").value;
+      const wireLine = (wireUnit === "awg")
+        ? `Wire: ${$("wireVal").value} AWG (≈ ${roundTo(o.d, 2)} mm)`
+        : `Wire: ${roundTo(o.d, 2)} mm`;
+
+      return [
+        `Curb Chain Recipe (${PRESETS[tightness].label})`,
+        `Length: ${$("lenVal").value} ${lenUnit}`,
+        wireLine,
+        `Ring ID: ${roundTo(o.ID, 2)} mm`,
+        `Ring OD: ${roundTo(o.OD, 2)} mm`,
+        `ID/Wire Ratio: ${roundTo(o.ratio, 2)}`,
+        `Est. rings: ${o.ringsEst}`,
+        `Plan to cut: ${o.ringsCut}${$("waste").checked ? " (+5%)" : ""}`,
+        `Est. curb width: ${roundTo(o.W_est, 2)} mm`,
+        `Est. rings per inch: ${roundTo(o.rpi, 2)}`,
+        `Metal: ${metalName}`,
+        `Est. wire length used: ${roundTo(o.wireLenMm / 1000, 2)} m`,
+        `Est. weight: ${roundTo(o.weightG, 1)} g`
+      ].join("\n");
     }
 
     function renderResults(o){
@@ -605,114 +569,206 @@
       $("outCut").textContent = `${o.ringsCut}${o.addWaste ? " (includes +5%)" : ""}`;
       $("outRpi").textContent = `${roundTo(o.rpi, 2)} rings/in`;
       $("outPitch").textContent = `${roundTo(o.pitch, 2)} mm`;
-
       $("outWireLen").textContent = `${roundTo(o.wireLenMm / 1000, 2)} m`;
       $("outWeight").textContent = `${roundTo(o.weightG, 1)} g`;
 
       const b = $("ratioBadge");
       b.className = "badge";
       let msg = `ID / wire ratio: ${roundTo(o.ratio, 2)} — `;
-
-      if(o.ratio < 2.6){ b.classList.add("bad"); msg += "Very tight (hard mode). Try increasing ID by 0.5–1.0 mm."; }
-      else if(o.ratio < 3.6){ b.classList.add("good"); msg += "Tight & workable ✅"; }
-      else if(o.ratio < 4.8){ b.classList.add("warn"); msg += "Medium drape."; }
+      if (o.ratio < 2.6) { b.classList.add("bad");  msg += "Very tight (hard mode)."; }
+      else if (o.ratio < 3.6) { b.classList.add("good"); msg += "Tight & workable ✅"; }
+      else if (o.ratio < 4.8) { b.classList.add("warn"); msg += "Medium drape."; }
       else { b.classList.add("warn"); msg += "Loose / floppy."; }
-
       b.textContent = msg;
     }
 
-    function buildRecipeText(o){
-      const lengthVal = parseFloat($("lenVal").value);
-      const lengthLabel = isFinite(lengthVal) ? lengthVal : "";
-      const lengthUnitLabel = lenUnit;
+    function calculate(){
+      clearInputErr();
+      $("toast").textContent = "";
 
-      const preset = PRESETS[tightness];
-      const metalName = $("metal").selectedOptions?.[0]?.textContent || $("metal").value;
+  if (chainType === "rope") {
+  if (chainType === "rope" && !IS_PRO) {
+  showInputErr("Rope calculations are part of the Pro version.");
+  return;
+   }
+  const L = getLengthMm();
+  const d = getWireMm();
+  if (L === null) return showInputErr("Please enter a valid finished length.");
+  if (d === null) return showInputErr("Please enter a valid wire size (mm or AWG).");
 
-      const wireLine = (wireUnit === "awg")
-        ? `Wire: ${$("wireVal").value} AWG (≈ ${roundTo(o.d, 2)} mm)`
-        : `Wire: ${roundTo(o.d, 2)} mm`;
+  const coreMm = parseFloat($("ropeCore")?.value);
+  if (!isFinite(coreMm) || coreMm <= 0) return showInputErr("Please enter a valid rope core diameter (mm).");
 
-      return [
-        `Curb Chain Recipe (${preset.label})`,
-        `Length: ${lengthLabel} ${lengthUnitLabel}`,
-        wireLine,
-        `Ring ID: ${roundTo(o.ID, 2)} mm`,
-        `Ring OD: ${roundTo(o.OD, 2)} mm`,
-        `ID/Wire Ratio: ${roundTo(o.ratio, 2)}`,
-        `Est. rings: ${o.ringsEst}`,
-        `Plan to cut: ${o.ringsCut}${$("waste").checked ? " (+5%)" : ""}`,
-        `Est. curb width: ${roundTo(o.W_est, 2)} mm`,
-        `Est. rings per inch: ${roundTo(o.rpi, 2)}`,
-        `Metal: ${metalName}`,
-        `Est. wire length used: ${roundTo(o.wireLenMm/1000, 2)} m`,
-        `Est. weight: ${roundTo(o.weightG, 1)} g`
-      ].join("\n");
+  const twistKey = $("ropeTwist")?.value || "medium";
+
+  // Estimated rope outside diameter (OD)
+  const ropeOD = coreMm + 2 * d;
+
+  // Your helix-based length estimate
+  const wireLenMm = estimateRopeWireLengthMm(L, d, coreMm, twistKey);
+
+  const density = DENSITY[$("metal").value] || DENSITY.sterling;
+  const weightG = estimateWeightGrams(d, wireLenMm, density);
+
+  // Reuse existing output tiles (so we don’t redesign UI yet)
+  $("resultsBlock").classList.remove("hidden");
+  $("resultNote").classList.add("hidden");
+
+  $("outWire").textContent = `${roundTo(d, 2)} mm`;
+  $("outId").textContent = `${roundTo(coreMm, 2)} mm`;     // showing core dia here
+  $("outOd").textContent = `${roundTo(ropeOD, 2)} mm`;     // rope OD here
+  $("outWidth").textContent = `—`;
+  $("outRings").textContent = `—`;
+  $("outCut").textContent = `—`;
+  $("outRpi").textContent = `—`;
+  $("outPitch").textContent = `—`;
+  $("outWireLen").textContent = `${roundTo(wireLenMm / 1000, 2)} m`;
+  $("outWeight").textContent = `${roundTo(weightG, 1)} g`;
+
+  const b = $("ratioBadge");
+  b.className = "badge good";
+  b.textContent = `Rope estimate — Core: ${roundTo(coreMm, 2)} mm | OD: ${roundTo(ropeOD, 2)} mm | Twist: ${ROPE_TWIST[twistKey]?.label ?? twistKey}`;
+
+  // Optional: build a rope recipe text (so Copy Recipe works)
+  const metalName = $("metal").selectedOptions?.[0]?.textContent || $("metal").value;
+  window.__lastRecipe = [
+    `Rope Chain Recipe (${ROPE_TWIST[twistKey]?.label ?? twistKey})`,
+    `Length: ${$("lenVal").value} ${lenUnit}`,
+    (wireUnit === "awg")
+      ? `Wire: ${$("wireVal").value} AWG (≈ ${roundTo(d, 2)} mm)`
+      : `Wire: ${roundTo(d, 2)} mm`,
+    `Core (mandrel): ${roundTo(coreMm, 2)} mm`,
+    `Est. rope OD: ${roundTo(ropeOD, 2)} mm`,
+    `Metal: ${metalName}`,
+    `Est. wire length used: ${roundTo(wireLenMm / 1000, 2)} m`,
+    `Est. weight: ${roundTo(weightG, 1)} g`,
+    `Note: Rope math is an estimate—test a short sample for your exact twist + tension.`
+  ].join("\n");
+
+  localStorage.setItem(STORAGE_KEY_LAST, JSON.stringify(getCurrentSettings()));
+  return;
+}
+
+// curb calculation continues below...
+
+      const L = getLengthMm();
+      const d = getWireMm();
+      if (L === null) return showInputErr("Please enter a valid finished length.");
+      if (d === null) return showInputErr("Please enter a valid wire size (mm or AWG).");
+
+      const { f, k } = PRESETS[tightness];
+
+      let ID, OD, W_est;
+
+      if (mode === "id"){
+        ID = parseFloat($("ringId").value);
+        if (!isFinite(ID) || ID <= 0) return showInputErr("Please enter a valid ring ID (mm).");
+        OD = ID + 2 * d;
+        W_est = f * OD;
+      } else {
+        const W_target = parseFloat($("targetWidth").value);
+        if (!isFinite(W_target) || W_target <= 0) return showInputErr("Please enter a valid target curb width (mm).");
+        OD = W_target / f;
+        ID = OD - 2 * d;
+        W_est = f * OD;
+      }
+
+      const ratio = ID / d;
+      const pitch = k * OD;
+      const ringsRaw = L / pitch;
+      const addWaste = $("waste").checked;
+
+      const ringsEst = roundInt(ringsRaw);
+      const ringsCut = ceilInt(addWaste ? ringsRaw * 1.05 : ringsRaw);
+      const rpi = 25.4 / pitch;
+
+      const density = DENSITY[$("metal").value] || DENSITY.sterling;
+      const wireLenMm = estimateWireLengthMm(ID, d, ringsCut);
+      const weightG = estimateWeightGrams(d, wireLenMm, density);
+
+      const out = { d, ID, OD, W_est, ratio, pitch, ringsEst, ringsCut, rpi, wireLenMm, weightG, addWaste };
+      renderResults(out);
+
+      window.__lastRecipe = buildRecipeText(out);
+      localStorage.setItem(STORAGE_KEY_LAST, JSON.stringify(getCurrentSettings()));
     }
 
     async function copyRecipe(){
       const txt = window.__lastRecipe;
-      if(!txt){ $("toast").textContent = "Run a calculation first, then copy."; return; }
-      try{ await navigator.clipboard.writeText(txt); $("toast").textContent = "Copied to clipboard ✅"; }
-      catch{
+      if (!txt) { $("toast").textContent = "Run a calculation first, then copy."; return; }
+      try { await navigator.clipboard.writeText(txt); $("toast").textContent = "Copied ✅"; }
+      catch {
         const ta = document.createElement("textarea");
         ta.value = txt; document.body.appendChild(ta);
         ta.select(); document.execCommand("copy");
         document.body.removeChild(ta);
-        $("toast").textContent = "Copied to clipboard ✅";
+        $("toast").textContent = "Copied ✅";
       }
     }
 
     function resetAll(){
+      $("chainType").value = "curb"; setChainType("curb");
       $("lenVal").value = 8.0; setLenUnit("in");
       $("wireVal").value = 2.0; setWireUnit("mm");
-      setMode("id");
-      $("ringId").value = 5.5;
-      $("targetWidth").value = 8.5;
+      setMode("id"); $("ringId").value = 5.5; $("targetWidth").value = 8.5;
       setTightness("tight");
       $("waste").checked = true;
       $("metal").value = "sterling";
       $("recipeName").value = "";
-
       $("resultsBlock").classList.add("hidden");
       $("resultNote").classList.remove("hidden");
-      $("resultNote").innerHTML = 'Enter your inputs and tap <b>Calculate</b>.';
       $("toast").textContent = "";
       clearInputErr();
       window.__lastRecipe = null;
-      window.__lastRecipeSettings = null;
-
       updateWireHint();
       localStorage.setItem(STORAGE_KEY_LAST, JSON.stringify(getCurrentSettings()));
     }
 
-    // --- Service worker registration (required for installability on Chromium) 1
-    if("serviceWorker" in navigator){
+    // --- wire up UI ---
+    $("lenIn").onclick = () => setLenUnit("in");
+    $("lenMm").onclick = () => setLenUnit("mm");
+
+    $("wireUnitMm").onclick = () => setWireUnit("mm");
+    $("wireUnitAwg").onclick = () => setWireUnit("awg");
+
+    $("modeIdCard").onclick = () => setMode("id");
+    $("modeWidthCard").onclick = () => setMode("width");
+
+    $("tTight").onclick = () => setTightness("tight");
+    $("tMed").onclick = () => setTightness("medium");
+    $("tLoose").onclick = () => setTightness("loose");
+
+    $("chainType").addEventListener("change", (e) => setChainType(e.target.value));
+
+    $("calcBtn").onclick = calculate;
+    $("copyBtn").onclick = copyRecipe;
+    $("resetBtn").onclick = resetAll;
+
+    $("saveRecipeBtn").onclick = saveCurrentRecipe;
+    $("recipeList").addEventListener("change", loadSelectedRecipe);
+
+    // --- init ---
+    updateWireHint();
+    refreshRecipeList();
+    const last = (() => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY_LAST)); } catch { return null; } })();
+    applySettings(last);
+
+    // --- Pro unlock helper (temporary) ---
+function unlockPro(code){
+  if (code === "N8PRO") {
+    localStorage.setItem("n8_calc_pro", "true");
+    alert("Pro unlocked! Refresh the page.");
+  } else {
+    alert("Invalid Pro code.");
+  }
+}
+
+    // --- PWA service worker ---
+    if ("serviceWorker" in navigator){
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(()=>{});
+        navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
       });
     }
-
-    // init
-    setMode("id");
-    setTightness("tight");
-    $("wireVal").addEventListener("input", updateWireHint);
-    updateWireHint();
-
-    // load saved settings + recipes
-    const last = (() => {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY_LAST)); }
-      catch { return null; }
-    })();
-    applySettings(last);
-    refreshRecipeList();
   </script>
-  <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js");
-    });
-  }
-</script>
-  </body>
+</body>
 </html>

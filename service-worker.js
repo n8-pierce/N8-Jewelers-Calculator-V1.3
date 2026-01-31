@@ -1,4 +1,4 @@
-const CACHE_NAME = "n8-jewelers-calc-v1.3";
+const CACHE_NAME = "n8-jewelers-calc-v1.4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -25,8 +25,26 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // For navigation + HTML, prefer network so updates show immediately
+  if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          // Update cached index.html in the background
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
+          return res;
+        })
+        .catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
+
+  // For everything else (icons, manifest, JS), cache-first is fine
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(req).then((cached) => cached || fetch(req))
   );
 });
 
